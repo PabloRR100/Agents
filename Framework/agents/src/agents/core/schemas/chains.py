@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from agents.core.schemas.clients import Client, ClientConfig, ClientRequest, ClientResponse
 
 
-class ChainInputs(BaseModel)
+class ChainInputs(BaseModel):
     """
     A ChainInputs is a request to an LLM chain
     """
@@ -28,8 +28,4 @@ class Chain(BaseModel):
         Run the chain with the given inputs and return the outputs
         """
         pass
-
-
-
-
 
