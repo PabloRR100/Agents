@@ -1,0 +1,19 @@
+[project]
+name = "agents"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Pablo Ruiz", email = "p_ruizruiz@apple.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.12",
+    "pydantic-settings>=2.8.1",
+    "pydantic>=2.11.0",
+    "python-dotenv>=1.1.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
