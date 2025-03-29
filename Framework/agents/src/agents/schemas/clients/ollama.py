@@ -1,7 +1,6 @@
-from pydantic import BaseModel, model_validator
-from ollama import Client, ChatResponse
+from pydantic import model_validator
 
-from agents.core.schemas.clients.base import Client, ClientConfig
+from agents.schemas.clients.base import Client, ClientConfig
 
 
 class OllamaClientConfig(ClientConfig):

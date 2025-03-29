@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import vertexai
 from pydantic import model_validator
 
-from agents.core.schemas.clients.base import Client, ClientConfig
+from agents.schemas.clients.base import Client, ClientConfig
 
 
 load_dotenv()
