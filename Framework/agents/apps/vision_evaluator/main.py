@@ -26,7 +26,7 @@ class VisionEvaluatorApp:
 if __name__ == "__main__":
     # Example usage
     app = VisionEvaluatorApp()
-    inputs = {
+    sample_inputs = {
         "conversation":
             [
                 {
@@ -39,5 +39,5 @@ if __name__ == "__main__":
                 }
             ]
     }
-    response = app.run(inputs)
+    response = app.run(sample_inputs)
     print(response)
