@@ -2,7 +2,7 @@ import fastapi
 
 from fastapi.responses import JSONResponse
 
-from apps.vision_evaluator.main import VisionEvaluatorApp
+from main import VisionEvaluatorApp
 
 app = fastapi.FastAPI()
 

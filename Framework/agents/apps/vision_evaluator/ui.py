@@ -1,7 +1,8 @@
 import streamlit as st
 from PIL import Image
-from apps.vision_evaluator.agent import VisionEvaluator
-from apps.vision_evaluator.schemas import EvaluationRequest, EvaluationResponse, EvaluationTurn, EvaluationFlow# Initialize the Vision Evaluator app
+
+from agent import VisionEvaluator
+from schemas import EvaluationRequest, EvaluationTurn, EvaluationFlow
 
 evaluator = VisionEvaluator()# Streamlit interface
 

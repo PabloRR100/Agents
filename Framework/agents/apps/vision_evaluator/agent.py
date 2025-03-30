@@ -3,7 +3,7 @@ Vision Evaluator Agent
 """
 
 from agents.schemas.chains import Chain
-from apps.vision_evaluator.schemas import (
+from schemas import (
     EvaluationFlow,
     EvaluationRequest,
     EvaluationTurn,

@@ -1,7 +1,7 @@
 """
 """
-from apps.vision_evaluator.agent import VisionEvaluator
-from apps.vision_evaluator.schemas import EvaluationRequest, EvaluationResponse
+from agent import VisionEvaluator
+from schemas import EvaluationRequest, EvaluationResponse
 
 
 class VisionEvaluatorApp:
@@ -39,5 +39,5 @@ if __name__ == "__main__":
                 }
             ]
     }
-    response = app.run(sample_inputs)
-    print(response)
+    sample_response = app.run(sample_inputs)
+    print(sample_response)
