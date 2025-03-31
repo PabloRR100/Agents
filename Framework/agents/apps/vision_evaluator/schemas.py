@@ -5,7 +5,7 @@ from io import BytesIO
 from PIL import Image
 from pydantic import ConfigDict, field_validator, Field, model_validator
 
-from agents.schemas import Serializable
+from agents.core import Serializable
 
 
 def encode_image(image: Image.Image) -> str:
@@ -49,7 +49,7 @@ class EvaluationTurn(Serializable):
 
 class EvaluationRequest(Serializable):
     conversation: list[EvaluationTurn]
-    evaluation_flow: EvaluationFlow = Field(default=EvaluationFlow.PER_TURN, description="The evaluation flow to be used")
+    evaluation_flow: EvaluationFlow = Field(default=EvaluationFlow.SINGLE_PASS, description="The evaluation flow to be used")
 
     @model_validator(mode="before")
     def assign_turn_indices(cls, values):

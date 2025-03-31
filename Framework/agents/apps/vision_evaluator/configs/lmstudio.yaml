@@ -1,0 +1,6 @@
+visual_evaluator:
+  client:
+    provider: lmstudio
+    config:
+      llm_name: llama-3.2-3b-instruct
+      endpoint_url: http://localhost:11434

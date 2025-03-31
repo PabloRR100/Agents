@@ -1,7 +1,7 @@
 import streamlit as st
 from PIL import Image
 
-from agent import VisionEvaluator
+from agent import VisionEvaluator, run_vision_evaluator
 from schemas import EvaluationRequest, EvaluationTurn, EvaluationFlow
 
 evaluator = VisionEvaluator()# Streamlit interface
@@ -28,7 +28,9 @@ if st.button("Evaluate"):
             conversation=[turn],
             evaluation_flow=EvaluationFlow(evaluation_flow)
         )
-        response = evaluator.run(request)
+        response = run_vision_evaluator(
+
+        )
         st.write("Reasoning:", response.reasoning)
         st.write("Evaluation:", response.evaluation)
     else:

@@ -2,9 +2,12 @@ import fastapi
 
 from fastapi.responses import JSONResponse
 
+from constants import PROJECT_ROOT
 from main import VisionEvaluatorApp
 
 app = fastapi.FastAPI()
+CONFIG = PROJECT_ROOT / "configs/lmstudio.yaml"
+
 
 @app.post("/evaluate")
 async def evaluate(inputs: dict):

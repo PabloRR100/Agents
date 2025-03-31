@@ -2,7 +2,7 @@
 Vision Evaluator Agent
 """
 
-from agents.schemas.chains import Chain
+from agents.core.chains import Chain
 from schemas import (
     EvaluationFlow,
     EvaluationRequest,
@@ -16,12 +16,11 @@ class VisionEvaluator(Chain[EvaluationRequest, EvaluationResponse]):
     Vision Evaluator Agent
     """
 
-    @staticmethod
-    def evaluate_turn(turn: EvaluationTurn) -> EvaluationResponse:
+    def evaluate_turn(self, turn: EvaluationTurn) -> EvaluationResponse:
         """
         Evaluate a single turn of the conversation
         """
-        # Implement the logic to evaluate a single turn
+        client_request = self.client.send_request(turn)
         return EvaluationResponse(
             reasoning="This is a mock reasoning for the evaluation",
             evaluation="PASS"
@@ -32,32 +31,47 @@ class VisionEvaluator(Chain[EvaluationRequest, EvaluationResponse]):
         """
         Aggregate the evaluations of all turns
         """
-        # Implement the logic to aggregate evaluations
+        # Implement the logic to aggregate evaluation
+        evaluation = "PASS" if all([turn.evaluation == "PASS" for turn in evaluated_turns]) else "FAIL"
         return EvaluationResponse(
-            reasoning="Aggregated reasoning goes here",
-            evaluation="Aggregated score goes here"
+            reasoning="Aggregated reasoning based on all turns' evaluations",
+            evaluation=evaluation
         )
 
-    @classmethod
-    def evaluate_conversation(cls, inputs: EvaluationRequest) -> EvaluationResponse:
+    def evaluate_conversation(self, inputs: EvaluationRequest) -> EvaluationResponse:
         """
         Evaluate the entire conversation.
         If evaluation_flow is ACCUMULATIVE, the score will only be asked for the last turn.
         If evaluation_flow is SINGLE PASS, the score will be asked to be provided for all the turns.
         """
         grade_last_interaction = True if inputs.evaluation_flow == EvaluationFlow.ACCUMULATIVE else False
-        return EvaluationResponse(
-            reasoning="This is a mock reasoning for the conversation evaluation",
-            evaluation="PASS",
-        )
+        response = self.run_chain(inputs)
+        return response
 
-
-    def run(self, inputs: EvaluationRequest) -> EvaluationResponse:
+    def run_chain(self, inputs: EvaluationRequest) -> EvaluationResponse:
         """
         Run the vision evaluator with the given inputs and return the outputs
         """
         # Implement the logic to evaluate the vision inputs
-        return EvaluationResponse(
-            reasoning="Evaluation reasoning goes here",
-            evaluation="Evaluation score goes here"
-        )
+        match inputs.evaluation_flow:
+            case EvaluationFlow.SINGLE_PASS | EvaluationFlow.ACCUMULATIVE:
+                return self.evaluate_conversation(inputs)
+            case EvaluationFlow.PER_TURN:
+                evaluated_turns = [
+                    self.evaluate_turn(turn) for turn in inputs.conversation
+                ]
+                return self.aggregate_turns(evaluated_turns)
+            case _:
+                raise ValueError(f"Unknown evaluation flow: {inputs.evaluation_flow}")
+
+
+def run_vision_evaluator(
+    config: dict,
+    inputs: dict,
+) -> EvaluationResponse:
+    """
+    Run the vision evaluator with the given inputs and return the outputs
+    """
+    evaluator = VisionEvaluator(config)
+    response = evaluator.run_chain(inputs)
+    return response

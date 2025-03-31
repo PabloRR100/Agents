@@ -1,7 +1,14 @@
 """
 """
+import logging
+from agents.logs import setup_logging
+
 from agent import VisionEvaluator
 from schemas import EvaluationRequest, EvaluationResponse
+
+
+setup_logging()
+LOG = logging.getLogger(__name__)
 
 
 class VisionEvaluatorApp:
@@ -10,6 +17,7 @@ class VisionEvaluatorApp:
     """
 
     def __init__(self):
+        LOG.info("Initializing Vision Evaluator app.")
         self.agent = VisionEvaluator()
 
     def run(self, inputs: dict) -> EvaluationResponse:
@@ -19,7 +27,7 @@ class VisionEvaluatorApp:
         # Convert the inputs to the appropriate format for the agent
         request = EvaluationRequest(**inputs)
         # Run the agent with the request
-        response = self.agent.run(request)
+        response = self.agent.evaluate(request)
         return response
 
 

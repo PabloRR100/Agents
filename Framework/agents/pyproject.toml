@@ -8,12 +8,15 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
+    "langchain>=0.3.22",
+    "lmstudio>=1.2.0",
     "ollama>=0.4.7",
     "openai>=1.69.0",
     "pillow>=11.1.0",
     "pydantic-settings>=2.8.1",
     "pydantic>=2.11.0",
     "python-dotenv>=1.1.0",
+    "pyyaml>=6.0.2",
     "vertexai>=1.71.1",
 ]
 

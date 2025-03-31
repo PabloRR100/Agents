@@ -1,0 +1,5 @@
+visual_evaluator:
+  client:
+    provider: gemini
+    config:
+      llm_name: gemini-1.5-pro

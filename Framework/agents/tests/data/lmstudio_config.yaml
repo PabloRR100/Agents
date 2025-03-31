@@ -1,0 +1,5 @@
+client:
+  provider: lmstudio
+  config:
+    llm_name: "olympiccoder-7b"
+    endpoint_url: "http://localhost:11434/"
