@@ -30,7 +30,7 @@ class SystemMessage(Message):
 class Action(Message):
     """
     """
-    name: Literal["say"]  # The action that the user wants to perform
+    name: Literal["say", "act"]  # The action that the user wants to perform
     parameters: dict | None = None  # The parameters for the action, if any
 
     @property
