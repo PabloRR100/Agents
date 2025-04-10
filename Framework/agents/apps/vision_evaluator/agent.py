@@ -20,7 +20,7 @@ class VisionEvaluator(Chain[EvaluationRequest, EvaluationResponse]):
         """
         Evaluate a single turn of the conversation
         """
-        client_request = self.client.send_request(turn)
+        client_request = self.client._send_request(turn)
         return EvaluationResponse(
             reasoning="This is a mock reasoning for the evaluation",
             evaluation="PASS"

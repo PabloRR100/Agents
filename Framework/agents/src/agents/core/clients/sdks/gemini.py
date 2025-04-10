@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from pydantic import model_validator
 
 from agents.core.clients import ClientResponse
-from agents.core.clients.base import Client, ClientConfig
+from agents.core.clients.base import BaseClient, ClientConfig
 
 
 load_dotenv()
@@ -35,7 +35,7 @@ class GeminiClientConfig(ClientConfig):
         return values
 
 
-class Gemini(Client):
+class Gemini(BaseClient):
     """
     Gemini client for interacting with the Gemini API.
     """
@@ -50,25 +50,7 @@ class Gemini(Client):
         """
         return values
 
-    @staticmethod
-    def _parse_request(request) -> tuple[str, GenerationConfig]:
-        prompt = request.get_last_user_message()
-        return prompt, GenerationConfig(
-            temperature=request.temperature,
-            max_output_tokens=request.max_tokens,
-        )
-
-    @staticmethod
-    def _parse_response(response: GenerationResponse) -> ClientResponse:
-        """
-        Parse the response from the Gemini API and return the generated text.
-        """
-        return ClientResponse.from_assistant_response(
-            response.text,
-            # metadata=**response
-        )
-
-    def send_request(self, request):
+    def solve_request(self, request):
         """
         Send a request to the Gemini API and return the response.
         """
@@ -79,4 +61,6 @@ class Gemini(Client):
             generation_config=generation_config
         )
         response = model.generate_content(prompt)
+        response = self._parse_response(response)
         return response
+

@@ -112,7 +112,7 @@ class ClientResponseMetadata(BaseModel):
     Metadata for a ClientResponse.
     Useful to store additional information about the response, like the usage
     """
-    pass
+    model_config = ConfigDict(extra="allow")
 
 
 class ClientResponse(BaseModel):
@@ -134,7 +134,7 @@ class ClientResponse(BaseModel):
         return self.message.content
 
 
-class Client(BaseModel, ABC):
+class BaseClient(ABC, BaseModel):
     """
     A Client is an LLM-Wrapper Interface.
     """
@@ -143,9 +143,29 @@ class Client(BaseModel, ABC):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    @abstractmethod
-    def send_request(self, request: ClientRequest) -> ClientResponse:
+    def solve_request(self, request: dict) -> ClientResponse:
         """
-        Send a request to the LLM client and return the response
+        Run the client with the given request.
         """
         raise NotImplementedError
+
+    # @staticmethod
+    # def _parse_request(request: dict) -> ClientRequest:
+    #     """
+    #     Parse the request and convert it to a format that the LLM client can understand.
+    #     """
+    #     raise NotImplementedError
+    #
+    # @staticmethod
+    # def _parse_response(response: dict) -> ClientResponse:
+    #     """
+    #     Parse the request and convert it to a format that the LLM client can understand.
+    #     """
+    #     raise NotImplementedError
+    #
+    # @abstractmethod
+    # def _send_request(self, request: ClientRequest) -> dict:
+    #     """
+    #     Send a request to the LLM client and return the response
+    #     """
+    #     raise NotImplementedError

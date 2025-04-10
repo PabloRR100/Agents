@@ -4,7 +4,7 @@ import lmstudio as lms
 from pydantic import model_validator
 
 from agents.core.clients import ClientRequest, ClientResponse
-from agents.core.clients.base import Client, ClientConfig
+from agents.core.clients.base import BaseClient, ClientConfig
 
 
 class LMStudioClientConfig(ClientConfig):
@@ -16,7 +16,7 @@ class LMStudioClientConfig(ClientConfig):
     endpoint_url: str
 
 
-class LMStudio(Client):
+class LMStudio(BaseClient):
     """
     LMStudio client for interacting with the Ollama API.
     """
@@ -56,7 +56,7 @@ class LMStudio(Client):
         client_response = ClientResponse.from_assistant_response(response.content)
         return client_response
 
-    def send_request(self, request: ClientRequest) -> ClientResponse:
+    def _send_request(self, request: ClientRequest) -> ClientResponse:
         """
         Send a request to the Ollama API and return the response.
         """
@@ -70,14 +70,6 @@ class LMStudio(Client):
 
         except Exception as e:
             raise e
-
-    def simple_prompt(self, query: str) -> ClientResponse:
-        """
-        Specific instance of send_request that simply sends 1 request (old /complete).
-        This method can be used for simpler queries.
-        """
-        request = ClientRequest(messages=[{"role": "user", "content": query}])
-        return self.send_request(request)
 
 
 if __name__ == "__main__":
@@ -101,5 +93,5 @@ if __name__ == "__main__":
         ]
     }
     sample_request = ClientRequest(**sample_request)  # Convert the dictionary to a ClientRequest object
-    sample_response = sample_client.send_request(request=sample_request)
+    sample_response = sample_client._send_request(request=sample_request)
     print(sample_response)

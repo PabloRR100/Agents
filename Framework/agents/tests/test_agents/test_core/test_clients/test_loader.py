@@ -2,8 +2,8 @@ import pytest
 
 from agents.constants import PROJECT_ROOT
 from agents.core.clients.loader import ClientLoader
-from agents.core.clients.lms import LMStudio
-from agents.core.clients.gemini import Gemini
+from agents.core.clients.sdks.lms import LMStudio
+from agents.core.clients.sdks.gemini import Gemini
 
 
 class TestClientLoader:

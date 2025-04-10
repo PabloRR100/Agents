@@ -1,43 +1,54 @@
 import requests
 from typing import Literal
 
-from agents.core.clients import Client, ClientRequest, ClientResponse, ClientConfig
+from agents.core.clients import BaseClient, ClientRequest, ClientResponse, ClientConfig
+from agents.core.clients.adapters import Adapter
 
 
-class GenericClient(Client):
+class Client(BaseClient):
     """
     GenericClient does not use any framework it just uses requests to send the request to the LLM.
     """
-    provider: Literal["generic"]
+    provider: Literal["openai", "lmstudio", "ollama"]
     config: ClientConfig
+    adapter: Adapter | None = None
+
+    def load_adapter(self):
+        self.adapter = Adapter
 
     @staticmethod
-    def prepare_request(request: ClientRequest) -> dict:
-        return request.model_dump()
+    def _parse_request(request: dict) -> ClientRequest:
+        return ClientRequest(**request)
 
     @staticmethod
-    def parse_response(response: requests.Response) -> ClientResponse:
+    def _parse_response(response: requests.Response) -> ClientResponse:
         return ClientResponse.from_assistant_response(
             assistant_message=response.json().get("message", ""),
             metadata=response.json().get("metadata", None)
         )
 
-    def send_request(self, request: ClientRequest) -> ClientResponse:
+    def _send_request(self, request: ClientRequest) -> dict:
         """
         Send a request to the LLM client and return the response.
         This method can be overridden by subclasses to provide specific functionality.
         """
-        data = self.prepare_request(request)
+        data = self._parse_request(request)
         response = requests.post(self.config.endpoint_url, json=data)
-        response = self.parse_response(response)
+        response = self._parse_response(response)
         return response
+
+    def solve_request(self, request: dict) -> ClientResponse:
+        """
+        Run the client with the given request.
+        """
+        return self._send_request(request)
 
 
 
 if __name__ == "__main__":
 
-    client = GenericClient(
-        provider="generic",
+    client = Client(
+        adapter=Adapter("openai"),
         config=ClientConfig(
             llm_name="llama-3.2-3b-instruct",
             endpoint_url="http://localhost:11434"
@@ -46,7 +57,7 @@ if __name__ == "__main__":
 
     question = "What is the capital of France?"
     client_request = ClientRequest.from_user_message(question)
-    client_response = client.send_request(client_request)
+    client_response = client._send_request(**client_request.model_dump())
     print(client_response.assistant_response)
 
     """
