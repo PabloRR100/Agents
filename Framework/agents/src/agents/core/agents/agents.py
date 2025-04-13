@@ -1,25 +1,39 @@
-from pydantic import BaseModel
+from abc import ABC, abstractmethod
+
+from agents.core.clients import BaseClient
 
 
-class Agent(BaseModel):
+class BaseAgent(ABC):
     """
     An agent is a type of chain that has agency.
     It works following the ReAct framework, which is a combination of reasoning and acting.
     """
+
+    def __init__(
+        self,
+        client: BaseClient,
+        *args,
+        **kwargs
+    ):
+        self.client = client
+
+    @abstractmethod
+    def run(self, *args, **kwargs):
+        """
+        Run the agent for the given task.
+        """
+        ...
+
+
+class SingleStepAgent(ABC, BaseAgent):
+    """
+    A single step agent is a type of agent that can only take one action to give the final response.
+    """
     pass
 
 
-"""
-curl http://localhost:1234/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "deepseek-r1-distill-qwen-7b",
-    "messages": [
-      { "role": "system", "content": "Always answer in rhymes. Today is Thursday" },
-      { "role": "user", "content": "What day is it today?" }
-    ],
-    "temperature": 0.7,
-    "max_tokens": -1,
-    "stream": false
-}
-"""
+class MultiStepAgent(ABC, BaseAgent):
+    """
+    A multi step agent is a type of agent that can take multiple actions to give the final response.
+    """
+    pass

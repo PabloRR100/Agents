@@ -1,5 +1,5 @@
 """
-Example of building a Joker chain.
+Joker Application built using the Chain API.
 
 When as a user I want to create a new Chain/Agent I just provide a config for the client and a task description.
 """

@@ -1,58 +1,16 @@
 """
 This module defines the base classes for LLM clients.
 """
-import requests
-from abc import ABC, abstractmethod
-from typing import Literal, TypeVar
+from abc import ABC
+from typing import TypeVar
 
 from pydantic import BaseModel, ConfigDict, model_validator
+
+from agents.core.schemas.messages import Message, UserMessage, AssistantMessage, Tool
 
 
 ClientType = TypeVar("ClientType", bound="Client")
 OutputSchema = TypeVar("OutputSchema", bound=BaseModel)
-
-
-class Message(BaseModel):
-    """
-    A Message is a message in a conversation
-    """
-    role: str
-    content: str
-
-
-class SystemMessage(Message):
-    """
-    A SystemMessage is a message from the system
-    """
-    role: str = "system"
-
-
-class Action(Message):
-    """
-    """
-    name: Literal["say", "act"]  # The action that the user wants to perform
-    parameters: dict | None = None  # The parameters for the action, if any
-
-    @property
-    def promptify(self):
-        if self.name == "say":
-            return self.parameters["content"]
-
-
-class UserMessage(Message):
-    """
-    A UserMessage is a message from the user
-    """
-    role: str = "user"
-    action: Action | None = None
-    images: list[str] | None = None
-
-
-class AssistantMessage(Message):
-    """
-    An AssistantMessage is a message from the assistant
-    """
-    role: str = "assistant"
 
 
 class ClientConfig(BaseModel):
@@ -65,6 +23,10 @@ class ClientConfig(BaseModel):
 
 class ClientRequestMetadata(BaseModel):
     """
+
+
+
+
     Metadata for a ClientRequest
     """
     output_schema: bool | None = OutputSchema
@@ -89,6 +51,7 @@ class ClientRequest(BaseModel):
     A ClientRequest is a request to an LLM client
     """
     messages: list[Message]
+    tools: list[Tool] | None = None
     metadata: ClientRequestMetadata | None = None
 
     @classmethod
